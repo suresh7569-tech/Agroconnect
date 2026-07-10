@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, sans-serif; color: #153f20; }
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-leaf-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-leaf-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-leaf-500;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-leaf-600 px-6 py-3 text-sm font-semibold text-leaf-700 transition hover:bg-leaf-50;
+  }
+  .container-page { @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.18em] text-leaf-700; }
+}

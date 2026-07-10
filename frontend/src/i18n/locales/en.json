@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "how": "How it works",
+    "farms": "Featured farms",
+    "visit": "Farm visits",
+    "story": "Our story",
+    "login": "Log in",
+    "join": "Join AgroConnect",
+    "dashboard": "Dashboard",
+    "logout": "Log out",
+    "cart": "Cart",
+    "marketplace": "Marketplace",
+    "language": "Language"
+  },
+  "hero": {
+    "eyebrow": "Farm to Consumer. Direct.",
+    "title": "Real food, from farmers you can",
+    "titleAccent": "see, meet, and trust.",
+    "body": "AgroConnect connects India's organic farmers directly with health-conscious consumers. Watch how it's grown, order what's ripe, and even visit the farm — no middlemen, no mystery ingredients.",
+    "shop": "Shop fresh produce",
+    "farmer": "I'm a farmer",
+    "kpiFarms": "Verified farms",
+    "kpiVillages": "Villages",
+    "kpiOrders": "Orders shipped"
+  },
+  "marketplace": {
+    "title": "Fresh from the field",
+    "subtitle": "Every crop below is from a verified organic farm.",
+    "search": "Search crops or farmers…",
+    "category": "Category",
+    "categoryAll": "All categories",
+    "sort": "Sort by",
+    "newest": "Newest",
+    "priceAsc": "Price: low to high",
+    "priceDesc": "Price: high to low",
+    "empty": "No crops match your filters yet.",
+    "addToCart": "Add to cart"
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty.",
+    "browse": "Browse marketplace",
+    "subtotal": "Subtotal",
+    "platformFee": "Platform fee",
+    "delivery": "Delivery charge",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove"
+  }
+}
