@@ -1,27 +1,45 @@
-const crypto = require('crypto');
+const twilio = require("twilio");
 
-const store = new Map();
-const TTL_MS = 5 * 60 * 1000;
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
-function keyFor(phone) {
-  return `otp:${phone}`;
-}
+const verifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
 
-exports.generateOtp = (phone) => {
-  const code = String(crypto.randomInt(100000, 1000000));
-  store.set(keyFor(phone), { code, expiresAt: Date.now() + TTL_MS });
-  console.log(`[otp] ${phone} → ${code} (dev-only console log)`);
-  return code;
-};
-
-exports.verifyOtp = (phone, code) => {
-  const entry = store.get(keyFor(phone));
-  if (!entry) return { ok: false, reason: 'no_otp' };
-  if (Date.now() > entry.expiresAt) {
-    store.delete(keyFor(phone));
-    return { ok: false, reason: 'expired' };
+exports.generateOtp = async (phone) => {
+  if (!phone.startsWith("+")) {
+    phone = "+91" + phone;
   }
-  if (entry.code !== code) return { ok: false, reason: 'mismatch' };
-  store.delete(keyFor(phone));
-  return { ok: true };
+
+  await client.verify.v2
+    .services(verifyServiceSid)
+    .verifications.create({
+      to: phone,
+      channel: "sms",
+    });
+
+  return true;
 };
+
+exports.verifyOtp = async (phone, code) => {
+  if (!phone.startsWith("+")) {
+    phone = "+91" + phone;
+  }
+
+  const result = await client.verify.v2
+    .services(verifyServiceSid)
+    .verificationChecks.create({
+      to: phone,
+      code: code,
+    });
+
+  if (result.status === "approved") {
+    return { ok: true };
+  }
+
+  return {
+    ok: false,
+    reason: result.status,
+  };
+}; 

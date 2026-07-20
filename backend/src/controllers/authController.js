@@ -45,7 +45,7 @@ exports.registerConsumer = async (req, res) => {
     preferredLanguage: preferredLanguage || 'en',
   });
 
-  generateOtp(phone);
+  await generateOtp(phone);
   res.status(201).json({
     message: 'Consumer registered. OTP sent to phone.',
     user: publicUser(user),
@@ -81,7 +81,7 @@ exports.registerFarmer = async (req, res) => {
     preferredLanguage: preferredLanguage || 'en',
   });
 
-  generateOtp(phone);
+  await generateOtp(phone);
   res.status(201).json({
     message: 'Farmer registered. OTP sent. Account will remain pending admin approval after OTP verification.',
     user: publicUser(user),
@@ -92,7 +92,7 @@ exports.registerFarmer = async (req, res) => {
 exports.sendOtp = async (req, res) => {
   const { phone } = req.body || {};
   if (!PHONE_RE.test(phone || '')) return res.status(400).json({ error: 'Valid 10-digit phone is required' });
-  generateOtp(phone);
+  await generateOtp(phone);
   res.json({ message: 'OTP sent', phone });
 };
 
@@ -100,7 +100,7 @@ exports.verifyOtpAndLogin = async (req, res) => {
   const { phone, code } = req.body || {};
   if (!phone || !code) return res.status(400).json({ error: 'phone and code are required' });
 
-  const result = verifyOtp(phone, code);
+  const result = await verifyOtp(phone, code);
   if (!result.ok) {
     const reason = { no_otp: 'No OTP requested', expired: 'OTP expired', mismatch: 'Invalid OTP' }[result.reason];
     return res.status(400).json({ error: reason });
