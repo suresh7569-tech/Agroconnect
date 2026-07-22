@@ -141,8 +141,8 @@ PATCH  /api/admin/users/:id/active       Suspend or reactivate a user
 | --- | --- | --- |
 | **JWT + bcrypt auth** | ✅ Real | — |
 | **MongoDB / Mongoose** | ✅ Real | Just install / point at Atlas |
-| **OTP (Twilio)** | Real - Twilio SMS integration | Replace `utils/otp.js` generateOtp with Twilio client call |
-| **Payments (Razorpay)** | ⚠️ Mock — accepts fake payment IDs | Set `RAZORPAY_KEY_ID` + `RAZORPAY_KEY_SECRET`, wire frontend Razorpay checkout SDK |
+| **OTP (Twilio)** |✅ Real - Twilio SMS integration | Twilio SMS integrated |
+| **Payments (Razorpay)** |  ✅ Real  | Razorpay checkout SDK integrated |
 | **Uploads (Cloudinary)** | ⚠️ Passthrough — expects URL strings | Set `CLOUDINARY_*`, add frontend Cloudinary widget in farmer dashboard |
 | **Google Maps** | ✅ Iframe embed (no API key needed) | Optional: switch to JS API for interactive maps |
 | **i18n (i18next)** | ✅ Real, 4 languages loaded | Translate remaining page strings — see `frontend/src/i18n/locales/` |
