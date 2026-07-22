@@ -43,35 +43,93 @@ export default function Checkout() {
   }
 
   const placeOrder = async () => {
-    setError(''); setBusy(true);
-    try {
-      if (paymentMethod !== 'cod') {
-        // Mock Razorpay dance: create order → mark verified.
-        await api.createRazorpayOrder(total, 'cart_' + Date.now(), token);
-      }
+  setError('');
+  setBusy(true);
 
-      const { order } = await api.createOrder({
+  try {
+    let paymentResponse = null;
+
+    // Razorpay / UPI Payment
+    if (paymentMethod !== 'cod') {
+      const payment = await api.createRazorpayOrder(
+        total,
+        'cart_' + Date.now(),
+        token
+      );
+
+      paymentResponse = await new Promise((resolve, reject) => {
+        const razor = new window.Razorpay({
+          key: payment.keyId,
+          amount: payment.amount,
+          currency: payment.currency,
+          order_id: payment.id,
+
+          name: 'AgroConnect',
+          description: 'Farm Products Purchase',
+
+          prefill: {
+            name: user?.name || '',
+            email: user?.email || '',
+            contact: user?.phone || '',
+          },
+
+          theme: {
+            color: '#16a34a',
+          },
+
+          handler: function (response) {
+            resolve(response);
+          },
+        });
+
+        razor.on('payment.failed', function () {
+          reject(new Error('Payment Failed'));
+        });
+
+        razor.open();
+      });
+    }
+
+    // Create Order
+    const { order } = await api.createOrder(
+      {
         farmId,
-        items: items.map(i => ({ cropId: i.crop._id, quantity: i.qty })),
+        items: items.map(i => ({
+          cropId: i.crop._id,
+          quantity: i.qty,
+        })),
         deliveryType,
-        deliveryAddress: deliveryType === 'home' ? address : undefined,
+        deliveryAddress:
+          deliveryType === 'home' ? address : undefined,
         paymentMethod,
         expectedDeliveryDate: expected,
-      }, token);
+      },
+      token
+    );
 
-      if (paymentMethod !== 'cod') {
-        await api.verifyPayment({ orderId: order._id }, token);
-      }
-
-      clear();
-      nav(`/orders/${order._id}`, { replace: true });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setBusy(false);
+    // Verify Payment
+    if (paymentMethod !== 'cod') {
+      await api.verifyPayment(
+        {
+          orderId: order._id,
+          razorpay_order_id: paymentResponse.razorpay_order_id,
+          razorpay_payment_id: paymentResponse.razorpay_payment_id,
+          razorpay_signature: paymentResponse.razorpay_signature,
+        },
+        token
+      );
     }
-  };
 
+    clear();
+    nav(`/orders/${order._id}`, { replace: true });
+
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setBusy(false);
+  }
+};
+      
   return (
     <PageShell>
       <section className="container-page py-12 grid gap-10 lg:grid-cols-[1.4fr,1fr]">

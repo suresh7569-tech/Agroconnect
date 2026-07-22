@@ -39,7 +39,7 @@ exports.createOrder = async (req, res) => {
     totalAmount,
     platformFee,
     deliveryCharge,
-    paymentStatus: paymentMethod === 'cod' ? 'pending' : 'held_in_escrow',
+    paymentStatus: paymentMethod === 'cod' ? 'pending' : 'pending',
     paymentMethod,
     deliveryType,
     deliveryAddress,
